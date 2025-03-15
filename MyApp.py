@@ -5,10 +5,7 @@ import requests
 import warnings
 from streamlit_option_menu import option_menu
 from streamlit_extras.mention import mention
-
 warnings.filterwarnings("ignore")
-
-
 
 generation_config = {
     "temperature": 1,
@@ -22,6 +19,11 @@ model = genai.GenerativeModel(
     model_name="gemini-2.0-flash",
     generation_config=generation_config,
 )
+
+SYSTEM_PROMPT = "You are a compulsive liar."
+
+
+st.set_page_config(page_title="Introduction to Streamlit and Gemini API", page_icon="", layout="wide")
 
 with st.sidebar :
     st.text("Text Here")
@@ -53,11 +55,22 @@ with st.sidebar :
             "nav-link" : {"font-size" : "17px", "text-align" : "left", "margin" : "5px", "--hover-color" : "#262730"},
             "nav-link-selected" : {"background-color" : "#262730"}          
         })
-    if 'message' not in st.session_state:
-        st.session_state.message = []
-    if 'chat_session' not in st.session_state:
-        st.session_state.chat_session = None
-    if options == 'Chat':
+    
+if 'message' not in st.session_state:
+    st.session_state.message = []
+if 'chat_session' not in st.session_state:
+    st.session_state.chat_session = None
+
+if options == "Home" :
+
+   st.title('This is the Home Page')
+  
+
+elif options == "About Us" :
+     st.title('This is the About Us Page')
+     st.write("\n")
+
+if options == 'Chat':
             if "chat_session" not in st.session_state:
                 st.session_state.chat_session = model.start_chat(history=[])
                 st.session_state.messages = []
@@ -85,4 +98,4 @@ with st.sidebar :
                         response = st.session_state.chat_session.send_message(user_message)
                         with st.chat_message("assistant"):
                             st.markdown(response.text)
-                            st.session_state.messages.append({"role": "assistant", "content": response.text})
+                        st.session_state.messages.append({"role": "assistant", "content": response.text})
